@@ -23,6 +23,7 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 ## Requirements
 
 - Python 3.12+
+- Install Unity-tool dependencies with `python3 -m pip install --user --break-system-packages UnityPy Pillow lz4 TypeTreeGeneratorAPI`
 - `UnityPy`, `Pillow`, `lz4`, `TypeTreeGeneratorAPI` for the Unity tools
 - `Pillow` for the Dead Cells tools
 - `uv` and `git` are needed only for the external Xanadu Next extractor (not vendored here)
@@ -33,6 +34,38 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - Run the production extractor before its companion pass: `extract_9d.py` then `extract_9d_audio.py`; `unpak.py` then `postprocess.py`.
 - The Dead Cells PAK reader streams in chunks and verifies Adler32 per entry; do not load the archive into memory.
 - `xanadu-next` is tracked as an external tool at https://github.com/Ell/xanadu-next rather than copied here.
+
+## Quickstart by game
+
+### Banners of Ruin
+
+- Edit `GAME`, `BUNDLES` and `OUT` at the top of `extract_all.py`; this build is Unity `2019.4.22f1`.
+- Run `python3 tools/banners_of_ruin/extract_all.py`.
+- Optional shader pass: `python3 tools/banners_of_ruin/extract_shaders.py`.
+- Output lands in `_extracted/` with `mapping.json`, `manifest.csv` and `report.txt`.
+
+### 9th Dawn III
+
+- Edit `GAME`, `OUT` and `VERSION` in both scripts; the build is Unity `2022.3.62f2`.
+- Run the main pass first: `python3 tools/ninth_dawn_iii/extract_9d.py`.
+- Then run the audio pass: `python3 tools/ninth_dawn_iii/extract_9d_audio.py`.
+- The audio pass is separate because decoding streamed audio inside the full pass fails with `FmodError: FORMAT`.
+- `run_9d_extraction.sh` runs both passes in order.
+
+### Legend of Keepers
+
+- Edit `GAME`, `OUT`, `BUNDLES` and `STREAM` in `extract_lok.py`; the build is Unity `2019.4.18f1`.
+- Run `python3 tools/legend_of_keepers/extract_lok.py`.
+- The script summarizes the Addressables catalog, copies non-bundle StreamingAssets files verbatim and writes `pak`-style reports into `_extracted/`.
+
+### Dead Cells
+
+- Only `Pillow` is required. Edit `BASE`/`GAME` paths in the scripts.
+- Index first: `python3 tools/dead_cells/unpak.py --index-only`.
+- Carve with verification: `python3 tools/dead_cells/unpak.py`.
+- Decode data: `python3 tools/dead_cells/postprocess.py`.
+- Optional: `render_btmx.py` for collision previews and `decode_markers.py` for object markers.
+- Outputs: `_extracted/raw/`, `data/`, `atlas_frames/`, `map_previews/` and `markers/`.
 
 ## Layout
 

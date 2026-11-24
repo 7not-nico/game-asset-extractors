@@ -17,6 +17,8 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Dead Cells | BATL atlases + `data.cdb` | `tools/dead_cells/postprocess.py` | Sheet decode and atlas frame splitting |
 | Dead Cells | BTMX maps | `tools/dead_cells/render_btmx.py` | Collision/link layer preview rendering |
 | Dead Cells | BTMX markers | `tools/dead_cells/decode_markers.py` | Marker object name/property extraction |
+| Cross Blitz | Unity 2020 IL2CPP, `data.unity3d` + Addressables | `tools/cross_blitz/extract_cb.py` | PNG, text, font, MonoBehaviour JSON and report extraction |
+| Cross Blitz | Streamed FSB5 + bundle audio | `tools/cross_blitz/extract_cb_audio.py` | Dedicated audio pass with whole-bank FSB5 fallback |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -26,12 +28,13 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - Install Unity-tool dependencies with `python3 -m pip install --user --break-system-packages UnityPy Pillow lz4 TypeTreeGeneratorAPI`
 - `UnityPy`, `Pillow`, `lz4`, `TypeTreeGeneratorAPI` for the Unity tools
 - `Pillow` for the Dead Cells tools
+- `fmod_toolkit` for Cross Blitz audio decoding
 - `uv` and `git` are needed only for the external Xanadu Next extractor (not vendored here)
 
 ## Usage notes
 
 - Each script carries its source-game paths as constants near the top; edit `GAME`, `OUT`, or equivalent before running on a different install.
-- Run the production extractor before its companion pass: `extract_9d.py` then `extract_9d_audio.py`; `unpak.py` then `postprocess.py`.
+- Run the production extractor before its companion pass: `extract_9d.py` then `extract_9d_audio.py`; `unpak.py` then `postprocess.py`; `extract_cb.py` then `extract_cb_audio.py`.
 - The Dead Cells PAK reader streams in chunks and verifies Adler32 per entry; do not load the archive into memory.
 - `xanadu-next` is tracked as an external tool at https://github.com/Ell/xanadu-next rather than copied here.
 
@@ -67,6 +70,15 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - Optional: `render_btmx.py` for collision previews and `decode_markers.py` for object markers.
 - Outputs: `_extracted/raw/`, `data/`, `atlas_frames/`, `map_previews/` and `markers/`.
 
+### Cross Blitz
+
+- Edit `GAME`, `OUT` and `BUNDLES` at the top of both scripts; the build is Unity `2020.3.4f1` IL2CPP.
+- No type-tree generator is used: the IL2CPP build embeds type trees in its serialized files.
+- Run the main pass first: `python3 tools/cross_blitz/extract_cb.py`.
+- Then run the audio pass: `python3 tools/cross_blitz/extract_cb_audio.py`.
+- The audio pass uses UnityPy samples for bundle audio and a whole-bank FSB5 fallback for `espannol`.
+- Outputs: `_extracted/raw/`, `audio/`, `mapping.json`, `manifest.csv` and `report.txt`.
+
 ## Layout
 
 ```
@@ -75,4 +87,5 @@ tools/
   ninth_dawn_iii/
   legend_of_keepers/
   dead_cells/
+  cross_blitz/
 ```

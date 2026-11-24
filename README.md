@@ -28,6 +28,7 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Talisman Digital Edition | Named ZIP asset packs | `tools/talisman/extract_talisman.py` | Extract all 25 ZIP packs with per-pack paths and manifest |
 | VVVVVV | Standard ZIP plus loose locale trees | `tools/vvvvvv/extract_vvvvvv.py` | Extract `data.zip` and copy language and license files |
 | NEO Scavenger | Custom engine, loose assets | `tools/neo_scavenger/extract_neoscavenger.py` | Package loose XML, PNG and mod files into a clean tree |
+| Spelunky | Raw WAD + text WIX indexes | `tools/spelunky/extract_spelunky.py` | Carve textures and sounds by index and copy loose assets |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -145,6 +146,15 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - The ELF executable is excluded because it is code, not asset data.
 - Outputs: `_extracted/` with `manifest.csv` and `report.txt`.
 
+### Spelunky
+
+- Edit `ROOT` at the top of `extract_spelunky.py` if the install path differs.
+- Run `python3 tools/spelunky/extract_spelunky.py`.
+- WAD files are raw concatenations; `.wix` indexes provide `filename offset size` lines grouped by `!group NAME`.
+- The tool carves entries into `wad/<archive>/<group>/<name>`, copies loose assets and extracts `webcache.zip`.
+- Save files with `.sav` and `.bak` are excluded as user data.
+- Outputs: `_extracted/assets/`, `wad/`, `webcache/`, `manifest.csv` and `report.txt`.
+
 ## Layout
 
 ```
@@ -161,4 +171,5 @@ tools/
   talisman/
   vvvvvv/
   neo_scavenger/
+  spelunky/
 ```

@@ -27,6 +27,7 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Balatro | LÖVE game appended to EXE | `tools/balatro/extract_balatro.py` | Read the appended ZIP and extract the full game tree |
 | Talisman Digital Edition | Named ZIP asset packs | `tools/talisman/extract_talisman.py` | Extract all 25 ZIP packs with per-pack paths and manifest |
 | VVVVVV | Standard ZIP plus loose locale trees | `tools/vvvvvv/extract_vvvvvv.py` | Extract `data.zip` and copy language and license files |
+| NEO Scavenger | Custom engine, loose assets | `tools/neo_scavenger/extract_neoscavenger.py` | Package loose XML, PNG and mod files into a clean tree |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -136,6 +137,14 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - Loose `lang/` and `licenses/` trees are copied to `_extracted/lang/` and `_extracted/licenses/`.
 - `.vvvvvv` files are XML level documents; outputs include `manifest.csv` and `report.txt`.
 
+### NEO Scavenger
+
+- Edit `GAME` at the top of `extract_neoscavenger.py` if the install path differs.
+- Run `python3 tools/neo_scavenger/extract_neoscavenger.py`.
+- Assets ship loose, so this is a packaging pass: `data/`, `img/`, `0/`, `SampleModFolder/` and root mod scripts are copied.
+- The ELF executable is excluded because it is code, not asset data.
+- Outputs: `_extracted/` with `manifest.csv` and `report.txt`.
+
 ## Layout
 
 ```
@@ -151,4 +160,5 @@ tools/
   balatro/
   talisman/
   vvvvvv/
+  neo_scavenger/
 ```

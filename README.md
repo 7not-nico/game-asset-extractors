@@ -24,6 +24,7 @@ No game assets, extracted output, or proprietary data are included — only the 
 | SteamWorld Heist | Custom engine, ZIP `.impak` + zlib `.z` | `tools/steamworld_heist/extract_steamworld.py` | Loose asset copy, stream inflation, archive unzip and atlas frame splitting |
 | Sunless Skies | Unity 2019 Mono, many serialized files + FSB5 audio | `tools/sunless_skies/extract_sunless.py` | PNG, text, font, MonoBehaviour JSON and report extraction |
 | Sunless Skies | Streamed FSB5 audio | `tools/sunless_skies/extract_sunless_audio.py` | Dedicated audio pass with WAV name deduplication |
+| Balatro | LÖVE game appended to EXE | `tools/balatro/extract_balatro.py` | Read the appended ZIP and extract the full game tree |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -110,6 +111,13 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - The audio pass decodes streamed clips through `AudioClip.samples` with a whole-bank FSB5 fallback and deduplicates WAV names.
 - Outputs: `_extracted/raw/`, `audio/`, `mapping.json`, `manifest.csv` and `report.txt`.
 
+### Balatro
+
+- Edit `GAME` and `OUT` at the top of `extract_balatro.py` if the install path differs.
+- Run `python3 tools/balatro/extract_balatro.py`.
+- The whole game archive is a ZIP appended to `Balatro.exe`; Python's `zipfile` reads it directly.
+- Outputs: `_extracted/assets/` preserving the LÖVE tree, plus `report.txt` and `manifest.csv`.
+
 ## Layout
 
 ```
@@ -122,4 +130,5 @@ tools/
   slay_the_spire/
   steamworld_heist/
   sunless_skies/
+  balatro/
 ```

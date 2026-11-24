@@ -19,6 +19,8 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Dead Cells | BTMX markers | `tools/dead_cells/decode_markers.py` | Marker object name/property extraction |
 | Cross Blitz | Unity 2020 IL2CPP, `data.unity3d` + Addressables | `tools/cross_blitz/extract_cb.py` | PNG, text, font, MonoBehaviour JSON and report extraction |
 | Cross Blitz | Streamed FSB5 + bundle audio | `tools/cross_blitz/extract_cb_audio.py` | Dedicated audio pass with whole-bank FSB5 fallback |
+| Slay the Spire | Java/libGDX asset JAR | `tools/slay_the_spire/extract_sts.py` | JAR asset extraction preserving original paths |
+| Slay the Spire | libGDX text atlases | `tools/slay_the_spire/split_atlases.py` | Atlas page cropping and rotation-corrected frame export |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -79,6 +81,15 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - The audio pass uses UnityPy samples for bundle audio and a whole-bank FSB5 fallback for `espannol`.
 - Outputs: `_extracted/raw/`, `audio/`, `mapping.json`, `manifest.csv` and `report.txt`.
 
+### Slay the Spire
+
+- Edit `ROOT` and `JAR` at the top of both scripts; assets live in `desktop-1.0.jar`.
+- Extract assets first: `python3 tools/slay_the_spire/extract_sts.py`.
+- Split atlases second: `python3 tools/slay_the_spire/split_atlases.py`.
+- `extract_sts.py` skips Java classes, native libraries and JAR metadata.
+- `split_atlases.py` parses libGDX text atlases and corrects clockwise-stored rotated regions.
+- Outputs: `_extracted/assets/`, `_extracted/atlas_frames/`, `report.txt`, `manifest.csv` and `atlas_report.txt`.
+
 ## Layout
 
 ```
@@ -88,4 +99,5 @@ tools/
   legend_of_keepers/
   dead_cells/
   cross_blitz/
+  slay_the_spire/
 ```

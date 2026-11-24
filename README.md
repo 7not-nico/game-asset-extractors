@@ -31,6 +31,7 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Spelunky | Raw WAD + text WIX indexes | `tools/spelunky/extract_spelunky.py` | Carve textures and sounds by index and copy loose assets |
 | Bloons TD 5 | Loose assets + JPNG images | `tools/bloons_td5/extract_bloons5.py` | Package the loose asset tree |
 | Bloons TD 5 | JPNG (JPEG + PNG alpha) | `tools/bloons_td5/convert_jpng.py` | Composite RGB and alpha into PNG files |
+| Planescape Torment EE | Infinity Engine KEY/BIF | `tools/planescape_torment/extract_pst.py` | Carve all KEY resources, copy loose locale/movie/override files |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -165,6 +166,15 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - JPNG is JPEG RGB plus a grayscale PNG alpha mask and a 16-byte footer with magic `GEPJ` or `GNPJ`; both variants are supported.
 - Outputs: `_extracted/Assets/`, `jpng_png/`, `manifest.csv`, `report.txt` and `jpng_report.txt`.
 
+### Planescape Torment: Enhanced Edition
+
+- Edit `GAME` at the top of `extract_pst.py` if the install path differs.
+- Run `python3 tools/planescape_torment/extract_pst.py`.
+- KEY locator layout: `bif = locator >> 20`, `index = locator & 0xFFFFF`.
+- BIFF tile entries use locator `0x4000` and are parsed alongside file entries.
+- Resources are written under `_extracted/resources/t<code>/` with magic-based extensions; loose files go to `_extracted/loose/`.
+- Outputs also include `manifest.csv` and `report.txt`.
+
 ## Layout
 
 ```
@@ -183,4 +193,5 @@ tools/
   neo_scavenger/
   spelunky/
   bloons_td5/
+  planescape_torment/
 ```

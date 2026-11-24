@@ -22,6 +22,8 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Slay the Spire | Java/libGDX asset JAR | `tools/slay_the_spire/extract_sts.py` | JAR asset extraction preserving original paths |
 | Slay the Spire | libGDX text atlases | `tools/slay_the_spire/split_atlases.py` | Atlas page cropping and rotation-corrected frame export |
 | SteamWorld Heist | Custom engine, ZIP `.impak` + zlib `.z` | `tools/steamworld_heist/extract_steamworld.py` | Loose asset copy, stream inflation, archive unzip and atlas frame splitting |
+| Sunless Skies | Unity 2019 Mono, many serialized files + FSB5 audio | `tools/sunless_skies/extract_sunless.py` | PNG, text, font, MonoBehaviour JSON and report extraction |
+| Sunless Skies | Streamed FSB5 audio | `tools/sunless_skies/extract_sunless_audio.py` | Dedicated audio pass with WAV name deduplication |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -100,6 +102,14 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - Avoid glob patterns containing `[8888]`; page PNGs are resolved by exact filename.
 - Outputs: `_extracted/assets/`, `raw_z/`, `impak/`, `atlas_frames/`, `report.txt` and `manifest.csv`.
 
+### Sunless Skies
+
+- Edit `GAME`, `OUT` and `VERSION` at the top of both scripts; the build is Unity `2019.4.2f1` Mono.
+- Run the main pass first: `python3 tools/sunless_skies/extract_sunless.py`.
+- Then run the audio pass: `python3 tools/sunless_skies/extract_sunless_audio.py`.
+- The audio pass decodes streamed clips through `AudioClip.samples` with a whole-bank FSB5 fallback and deduplicates WAV names.
+- Outputs: `_extracted/raw/`, `audio/`, `mapping.json`, `manifest.csv` and `report.txt`.
+
 ## Layout
 
 ```
@@ -111,4 +121,5 @@ tools/
   cross_blitz/
   slay_the_spire/
   steamworld_heist/
+  sunless_skies/
 ```

@@ -21,6 +21,7 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Cross Blitz | Streamed FSB5 + bundle audio | `tools/cross_blitz/extract_cb_audio.py` | Dedicated audio pass with whole-bank FSB5 fallback |
 | Slay the Spire | Java/libGDX asset JAR | `tools/slay_the_spire/extract_sts.py` | JAR asset extraction preserving original paths |
 | Slay the Spire | libGDX text atlases | `tools/slay_the_spire/split_atlases.py` | Atlas page cropping and rotation-corrected frame export |
+| SteamWorld Heist | Custom engine, ZIP `.impak` + zlib `.z` | `tools/steamworld_heist/extract_steamworld.py` | Loose asset copy, stream inflation, archive unzip and atlas frame splitting |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -90,6 +91,15 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - `split_atlases.py` parses libGDX text atlases and corrects clockwise-stored rotated regions.
 - Outputs: `_extracted/assets/`, `_extracted/atlas_frames/`, `report.txt`, `manifest.csv` and `atlas_report.txt`.
 
+### SteamWorld Heist
+
+- Edit `GAME` at the top of `extract_steamworld.py`; output goes to a sibling `_extracted/` directory.
+- Run `python3 tools/steamworld_heist/extract_steamworld.py`.
+- `.impak` files are ZIP archives and `.z` files are a four-byte uncompressed size plus a zlib stream.
+- The tool also parses the inflated `atlases.map` and crops named frames from both loose and archived atlas pages.
+- Avoid glob patterns containing `[8888]`; page PNGs are resolved by exact filename.
+- Outputs: `_extracted/assets/`, `raw_z/`, `impak/`, `atlas_frames/`, `report.txt` and `manifest.csv`.
+
 ## Layout
 
 ```
@@ -100,4 +110,5 @@ tools/
   dead_cells/
   cross_blitz/
   slay_the_spire/
+  steamworld_heist/
 ```

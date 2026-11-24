@@ -26,6 +26,7 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Sunless Skies | Streamed FSB5 audio | `tools/sunless_skies/extract_sunless_audio.py` | Dedicated audio pass with WAV name deduplication |
 | Balatro | LÖVE game appended to EXE | `tools/balatro/extract_balatro.py` | Read the appended ZIP and extract the full game tree |
 | Talisman Digital Edition | Named ZIP asset packs | `tools/talisman/extract_talisman.py` | Extract all 25 ZIP packs with per-pack paths and manifest |
+| VVVVVV | Standard ZIP plus loose locale trees | `tools/vvvvvv/extract_vvvvvv.py` | Extract `data.zip` and copy language and license files |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -127,6 +128,14 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - DDS textures can be decoded on demand with Pillow; `.enc` files are preserved but not decoded.
 - Outputs: `_extracted/assets/`, `raw/`, `manifest.csv` and `report.txt`.
 
+### VVVVVV
+
+- Edit `GAME` at the top of `extract_vvvvvv.py` if the install path differs.
+- Run `python3 tools/vvvvvv/extract_vvvvvv.py`.
+- `data.zip` is a standard ZIP; its entries are written under `_extracted/data/`.
+- Loose `lang/` and `licenses/` trees are copied to `_extracted/lang/` and `_extracted/licenses/`.
+- `.vvvvvv` files are XML level documents; outputs include `manifest.csv` and `report.txt`.
+
 ## Layout
 
 ```
@@ -141,4 +150,5 @@ tools/
   sunless_skies/
   balatro/
   talisman/
+  vvvvvv/
 ```

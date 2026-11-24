@@ -29,6 +29,8 @@ No game assets, extracted output, or proprietary data are included — only the 
 | VVVVVV | Standard ZIP plus loose locale trees | `tools/vvvvvv/extract_vvvvvv.py` | Extract `data.zip` and copy language and license files |
 | NEO Scavenger | Custom engine, loose assets | `tools/neo_scavenger/extract_neoscavenger.py` | Package loose XML, PNG and mod files into a clean tree |
 | Spelunky | Raw WAD + text WIX indexes | `tools/spelunky/extract_spelunky.py` | Carve textures and sounds by index and copy loose assets |
+| Bloons TD 5 | Loose assets + JPNG images | `tools/bloons_td5/extract_bloons5.py` | Package the loose asset tree |
+| Bloons TD 5 | JPNG (JPEG + PNG alpha) | `tools/bloons_td5/convert_jpng.py` | Composite RGB and alpha into PNG files |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -155,6 +157,14 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - Save files with `.sav` and `.bak` are excluded as user data.
 - Outputs: `_extracted/assets/`, `wad/`, `webcache/`, `manifest.csv` and `report.txt`.
 
+### Bloons TD 5
+
+- Edit `GAME` at the top of `extract_bloons5.py` if the install path differs; the tool packages `Assets/` and root text files while excluding EXE, ORIG and DLL.
+- Run `python3 tools/bloons_td5/extract_bloons5.py` first.
+- Then run `python3 tools/bloons_td5/convert_jpng.py`.
+- JPNG is JPEG RGB plus a grayscale PNG alpha mask and a 16-byte footer with magic `GEPJ` or `GNPJ`; both variants are supported.
+- Outputs: `_extracted/Assets/`, `jpng_png/`, `manifest.csv`, `report.txt` and `jpng_report.txt`.
+
 ## Layout
 
 ```
@@ -172,4 +182,5 @@ tools/
   vvvvvv/
   neo_scavenger/
   spelunky/
+  bloons_td5/
 ```

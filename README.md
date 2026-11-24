@@ -25,6 +25,7 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Sunless Skies | Unity 2019 Mono, many serialized files + FSB5 audio | `tools/sunless_skies/extract_sunless.py` | PNG, text, font, MonoBehaviour JSON and report extraction |
 | Sunless Skies | Streamed FSB5 audio | `tools/sunless_skies/extract_sunless_audio.py` | Dedicated audio pass with WAV name deduplication |
 | Balatro | LÖVE game appended to EXE | `tools/balatro/extract_balatro.py` | Read the appended ZIP and extract the full game tree |
+| Talisman Digital Edition | Named ZIP asset packs | `tools/talisman/extract_talisman.py` | Extract all 25 ZIP packs with per-pack paths and manifest |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -118,6 +119,14 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - The whole game archive is a ZIP appended to `Balatro.exe`; Python's `zipfile` reads it directly.
 - Outputs: `_extracted/assets/` preserving the LÖVE tree, plus `report.txt` and `manifest.csv`.
 
+### Talisman Digital Edition
+
+- Edit `GAME` at the top of `extract_talisman.py` if the install path differs.
+- Run `python3 tools/talisman/extract_talisman.py`.
+- All 25 `.zip` packs are standard ZIP archives; entries are written under `assets/<pack name>/`.
+- DDS textures can be decoded on demand with Pillow; `.enc` files are preserved but not decoded.
+- Outputs: `_extracted/assets/`, `raw/`, `manifest.csv` and `report.txt`.
+
 ## Layout
 
 ```
@@ -131,4 +140,5 @@ tools/
   steamworld_heist/
   sunless_skies/
   balatro/
+  talisman/
 ```

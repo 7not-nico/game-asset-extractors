@@ -32,6 +32,7 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Bloons TD 5 | Loose assets + JPNG images | `tools/bloons_td5/extract_bloons5.py` | Package the loose asset tree |
 | Bloons TD 5 | JPNG (JPEG + PNG alpha) | `tools/bloons_td5/convert_jpng.py` | Composite RGB and alpha into PNG files |
 | Planescape Torment EE | Infinity Engine KEY/BIF | `tools/planescape_torment/extract_pst.py` | Carve all KEY resources, copy loose locale/movie/override files |
+| Iconoclasts | Custom engine, indexed Assets.dat blob | `tools/iconoclasts/extract_iconoclasts.py` | Package loose assets and decode the indexed blob into PNG images, Ogg audio and GLSL shaders |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -43,6 +44,7 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - `Pillow` for the Dead Cells tools
 - `fmod_toolkit` for Cross Blitz audio decoding
 - `uv` and `git` are needed only for the external Xanadu Next extractor (not vendored here)
+- Iconoclasts decoding uses only the standard library; PNG output is written by a built-in encoder
 
 ## Usage notes
 
@@ -175,6 +177,16 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - Resources are written under `_extracted/resources/t<code>/` with magic-based extensions; loose files go to `_extracted/loose/`.
 - Outputs also include `manifest.csv` and `report.txt`.
 
+### Iconoclasts
+
+- Edit `GAME` at the top of `extract_iconoclasts.py` if the install path differs.
+- Run `python3 tools/iconoclasts/extract_iconoclasts.py`.
+- The index stores a wrapping delta counter; consecutive counter deltas give the chunk lengths used to carve the data region.
+- An image chunk carries a zlib header whose length and compressed-size field shift with a flag byte; it inflates to width times height times four RGBA bytes and is written as PNG.
+- Ogg pages and the trailing GLSL records form the sentinel band, named `asset_S00001` onward.
+- Real chunks are named `asset_00000` onward; output lands in `_extracted/` with `assets/`, `audio/`, `shaders/`, `raw/`, `manifest.csv` and `report.txt`.
+- Nothing is written into this repository — every decoded byte goes to the sibling `_extracted/` directory.
+
 ## Layout
 
 ```
@@ -194,4 +206,5 @@ tools/
   spelunky/
   bloons_td5/
   planescape_torment/
+  iconoclasts/
 ```

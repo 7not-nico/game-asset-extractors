@@ -33,6 +33,7 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Bloons TD 5 | JPNG (JPEG + PNG alpha) | `tools/bloons_td5/convert_jpng.py` | Composite RGB and alpha into PNG files |
 | Planescape Torment EE | Infinity Engine KEY/BIF | `tools/planescape_torment/extract_pst.py` | Carve all KEY resources, copy loose locale/movie/override files |
 | Iconoclasts | Custom engine, indexed Assets.dat blob | `tools/iconoclasts/extract_iconoclasts.py` | Package loose assets and decode the indexed blob into PNG images, Ogg audio and GLSL shaders |
+| Pathogenic | Godot 4 PCK | `tools/pathogenic/extract_pathogenic.py` | Extract every indexed PCK file with path, offset, size and MD5 manifest |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -45,6 +46,7 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - `fmod_toolkit` for Cross Blitz audio decoding
 - `uv` and `git` are needed only for the external Xanadu Next extractor (not vendored here)
 - Iconoclasts decoding uses only the standard library; PNG output is written by a built-in encoder
+- Pathogenic PCK extraction uses only the standard library
 
 ## Usage notes
 
@@ -187,6 +189,15 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - Real chunks are named `asset_00000` onward; output lands in `_extracted/` with `assets/`, `audio/`, `shaders/`, `raw/`, `manifest.csv` and `report.txt`.
 - Nothing is written into this repository — every decoded byte goes to the sibling `_extracted/` directory.
 
+### Pathogenic
+
+- Edit `ROOT` at the top of `extract_pathogenic.py` if the install path differs.
+- Run `python3 tools/pathogenic/extract_pathogenic.py`.
+- The tool validates the `GDPC` header, reads the directory at its stored offset and resolves each offset against the file base.
+- Entries are copied with a bounded buffer and their MD5 is recomputed during the copy.
+- Output lands in the sibling `_extracted/` tree with `manifest.csv` and `report.txt`.
+- Imported Godot resources such as `.ctex` and `RSRC` audio are copied verbatim and are not transcoded.
+
 ## Layout
 
 ```
@@ -207,4 +218,5 @@ tools/
   bloons_td5/
   planescape_torment/
   iconoclasts/
+  pathogenic/
 ```

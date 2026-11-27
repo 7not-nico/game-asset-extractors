@@ -34,6 +34,8 @@ No game assets, extracted output, or proprietary data are included — only the 
 | Planescape Torment EE | Infinity Engine KEY/BIF | `tools/planescape_torment/extract_pst.py` | Carve all KEY resources, copy loose locale/movie/override files |
 | Iconoclasts | Custom engine, indexed Assets.dat blob | `tools/iconoclasts/extract_iconoclasts.py` | Package loose assets and decode the indexed blob into PNG images, Ogg audio and GLSL shaders |
 | Pathogenic | Godot 4 PCK | `tools/pathogenic/extract_pathogenic.py` | Extract every indexed PCK file with path, offset, size and MD5 manifest |
+| The Slormancer | GameMaker `data.win` | `tools/slormancer/extract_slormancer.py` | Carve GameMaker chunks, audio streams, texture blobs and loose files |
+| The Slormancer | GameMaker FIOQ textures | `tools/slormancer/decode_assets.py` | Decode texture pages, sprite frames and font glyphs to PNG |
 
 Diagnostic probes for Dead Cells formats live beside the main tools under `tools/dead_cells/probe_*.py`.
 
@@ -47,6 +49,7 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - `uv` and `git` are needed only for the external Xanadu Next extractor (not vendored here)
 - Iconoclasts decoding uses only the standard library; PNG output is written by a built-in encoder
 - Pathogenic PCK extraction uses only the standard library
+- Slormancer extraction uses only the standard library; FIOQ decoding needs `Pillow`
 
 ## Usage notes
 
@@ -198,6 +201,17 @@ Diagnostic probes for Dead Cells formats live beside the main tools under `tools
 - Output lands in the sibling `_extracted/` tree with `manifest.csv` and `report.txt`.
 - Imported Godot resources such as `.ctex` and `RSRC` audio are copied verbatim and are not transcoded.
 
+### The Slormancer
+
+- Edit `ROOT` at the top of both scripts if the install path differs.
+- Run `python3 tools/slormancer/extract_slormancer.py` first to carve the containers and loose files.
+- Then run `python3 tools/slormancer/decode_assets.py` to decode texture pages, sprite frames and font glyphs.
+- The extractor writes `data_win/chunks/`, `audio/`, `textures/txtr/`, `textures/Textures_Fonts_0.fioq`, loose files, `manifest.csv` and `report.txt` under the sibling `_extracted/` directory.
+- The decoder writes `textures/decoded/`, `sprites/<name>/` and `fonts/<name>/`, each with metadata, and validates every page against its recorded pixel count.
+- GameMaker FIOQ is not stock QOI: it has distinct opcode families and an XOR color hash; `fioq_decode.py` vendors the reference decoder.
+- Texture page indices follow TXTR record order; record eighteen is stored in the external `.yytex` file.
+- Some pages encode extended runs with a wider opcode mask, so the decoder tries each variant and keeps the one that reaches the full pixel count.
+
 ## Layout
 
 ```
@@ -219,4 +233,5 @@ tools/
   planescape_torment/
   iconoclasts/
   pathogenic/
+  slormancer/
 ```
